@@ -44,7 +44,7 @@ StructDecl      = TYPEDEF? STRUCT n:ID? LBRACE ret:''                   {   Json
                                                                             JsonItem(oJson, "Items/-1") = Empty
                                                                             Set $ret = oJson }
                   (
-                      (t:Type es:StuctMemList as:ArraySuffixList? SEMI) {   JsonItem(oEl, "Names") = $es
+                      (t:Type es:StructMemList as:ArraySuffixList? SEMI){   JsonItem(oEl, "Names") = $es
                                                                             JsonItem(oEl, "Type") = $t
                                                                             JsonItem(oEl, "ArraySuffixes") = $as
                                                                             Set oJson = $ret
@@ -88,8 +88,8 @@ TypeBody        = INT           | CHAR          | UNSIGNED
                   | DOUBLE      | LONG          | LONG_LONG     | BOOL          
                   | RefType
 TypeSuffix      = (CONST? STAR)*
-                                            # Note: action with prefix '&' is evaluated at match time
-RefType         = !CC_STDCALL ID          &{ IsRefType($$text) }          
+                                        # Note: action with prefix '&' is evaluated at match time
+RefType         = ID                    &{ IsRefType($$text) }          
 ParamList       = ret:Param                                             {   JsonItem(oJson, -1) = $ret : Set $ret = oJson }
                   (
                     COMMA n:Param                                       {   Set oJson = $ret : JsonItem(oJson, -1) = $n }
@@ -109,7 +109,7 @@ IDList          = ret:ID                                                {   Json
                   (
                     COMMA n:ID                                          {   Set oJson = $ret : JsonItem(oJson, -1) = $n }
                   )*                                                    {   Set $$ = $ret }
-StuctMemList    = ret:ID                                                {   JsonItem(oJson, -1) = $ret : Set $ret = oJson }
+StructMemList   = ret:ID                                                {   JsonItem(oJson, -1) = $ret : Set $ret = oJson }
                   (
                     ArraySuffix? COMMA STAR? n:ID                       {   Set oJson = $ret : JsonItem(oJson, -1) = $n }
                   )*                                                    {   Set $$ = $ret }

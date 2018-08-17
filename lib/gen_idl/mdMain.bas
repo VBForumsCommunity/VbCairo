@@ -185,13 +185,13 @@ EH:
     ConsoleError "Critical error: " & Err.Description & vbCrLf
 End Sub
 
-Private Sub pvIncludeFile(uState As UcsStateType, oInclude As Object)
+Private Sub pvIncludeFile(uState As UcsStateType, oParseTree As Object)
     Dim vKey            As Variant
     Dim oItem           As Object
     Dim vElem           As Variant
     
-    For Each vKey In JsonKeys(oInclude)
-        Set oItem = JsonItem(oInclude, vKey)
+    For Each vKey In JsonKeys(oParseTree)
+        Set oItem = JsonItem(oParseTree, vKey)
         Select Case JsonItem(oItem, "Tag")
         Case "TypedefDecl"
             If Not SearchCollection(uState.Typedefs, JsonItem(oItem, "Name")) Then
@@ -256,7 +256,7 @@ Private Sub pvOutputFunc(uState As UcsStateType, oItem As Object)
     Dim vKey            As Variant
     Dim oParam          As Object
     Dim sType           As String
-    Dim sDirection      As String
+    Dim sAttr           As String
     
     If IsObject(JsonItem(oItem, "Params")) Then
         lCount = UBound(JsonKeys(oItem, "Params")) + 1
@@ -272,8 +272,8 @@ Private Sub pvOutputFunc(uState As UcsStateType, oItem As Object)
         lIdx = 1
         For Each vKey In JsonKeys(oItem, "Params")
             Set oParam = JsonItem(oItem, "Params/" & vKey)
-            sType = pvToIdlType(uState, JsonItem(oParam, "Type"), sDirection)
-            sText = sText & Space$(IDENT + 16) & "[" & sDirection & "] " & sType & _
+            sType = pvToIdlType(uState, JsonItem(oParam, "Type"), ParamAttr:=sAttr)
+            sText = sText & Space$(IDENT + 16) & "[" & sAttr & "] " & sType & _
                 " " & Zn(JsonItem(oParam, "Name"), "p" & lIdx) & IIf(lIdx < lCount, "," & vbCrLf, vbNullString)
             lIdx = lIdx + 1
         Next
@@ -423,9 +423,9 @@ End Sub
 Private Function pvToIdlType( _
             uState As UcsStateType, _
             sType As String, _
-            Optional sDirection As String, _
-            Optional ByVal ReturnType As Boolean, _
-            Optional TypeDecl As Object) As String
+            Optional ParamAttr As String, _
+            Optional TypeDecl As Object, _
+            Optional ByVal ReturnType As Boolean) As String
     Dim sKey            As String
     Dim vArray          As Variant
     Dim sSuffix         As String
@@ -433,11 +433,11 @@ Private Function pvToIdlType( _
     If SearchCollection(uState.MapTypes, ReturnType & "#" & sType) Then
         vArray = uState.MapTypes.Item(ReturnType & "#" & sType)
         pvToIdlType = vArray(0)
-        sDirection = vArray(1)
+        ParamAttr = vArray(1)
         Set TypeDecl = vArray(3)
         Exit Function
     End If
-    sDirection = "in"
+    ParamAttr = "in"
     sKey = preg_replace("(\b(const|struct|enum)\s+)|\s+", sType, vbNullString)
     Select Case sKey
     Case "char*", "unsignedchar*"
@@ -450,12 +450,12 @@ Private Function pvToIdlType( _
         pvToIdlType = "LONG"
     Case Else
         If Right$(sKey, 2) = "**" Then
-            sDirection = "in, out"
+            ParamAttr = "in, out"
             pvToIdlType = "LONG *"
         Else
             If Right$(sKey, 1) = "*" Then
                 sKey = Left$(sKey, Len(sKey) - 1)
-                sDirection = "in, out"
+                ParamAttr = "in, out"
                 sSuffix = " *"
             End If
             Select Case sKey
@@ -480,37 +480,34 @@ Private Function pvToIdlType( _
             Case "GlyphSet", "XRenderPictFormat", "FT_Face"
                 pvToIdlType = "LONG"
             Case Else
-                If UCase$(sKey) = sKey Then                 '--- Win32 API: HFONT, LOGFONT, etc.
-                    pvToIdlType = "LONG" & sSuffix
-                ElseIf SearchCollection(uState.Typedefs, sKey) Then
+                If SearchCollection(uState.Typedefs, sKey) Then
                     Set TypeDecl = uState.Typedefs.Item(sKey)
                     JsonItem(TypeDecl, "Used/" & sKey) = True
                     pvToIdlType = preg_replace("\b(const|struct|enum)\s+", Trim$(sType), vbNullString)
+                ElseIf UCase$(sKey) = sKey Then     '--- Win32 API: HFONT, LOGFONT, etc.
+                    pvToIdlType = "LONG" & sSuffix
                 Else
                     ConsoleError "Unknown data-type '" & sType & "' (" & sKey & "). Will default to LONG" & vbCrLf
-                    sDirection = "in"
+                    ParamAttr = "in"
                     pvToIdlType = "LONG"
                 End If
             End Select
         End If
     End Select
-    uState.MapTypes.Add Array(pvToIdlType, sDirection, sType, TypeDecl), ReturnType & "#" & sType
+    uState.MapTypes.Add Array(pvToIdlType, ParamAttr, sType, TypeDecl), ReturnType & "#" & sType
 End Function
 
+'--- This function is called from mdParser for unknown data-types
 Public Function IsRefType(sType As String) As Boolean
-    If UCase$(sType) = sType Then           '--- Win32 API: HFONT, LOGFONT, etc.
+    If Left$(sType, 6) = "_cairo" Then
+        IsRefType = True
+    ElseIf Left$(sType, 6) = "cairo_" Then
         IsRefType = True
     ElseIf Left$(sType, 11) = "xcb_render_" Then
         IsRefType = True
     ElseIf Left$(sType, 4) = "Cogl" Then
         IsRefType = True
-    ElseIf Left$(sType, 6) = "_cairo" Then
-        IsRefType = True
-    ElseIf Left$(sType, 6) = "cairo_" Then
-        IsRefType = True
-    ElseIf Left$(sType, 4) = "LLVM" Then
-        IsRefType = True
-    ElseIf Left$(sType, 5) = "llvm_" Then
+    ElseIf UCase$(sType) = sType Then               '--- Win32 API: HFONT, LOGFONT, etc.
         IsRefType = True
     Else
         Select Case sType

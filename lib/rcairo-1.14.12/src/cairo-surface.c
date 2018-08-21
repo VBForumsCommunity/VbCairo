@@ -1211,7 +1211,7 @@ cairo_surface_get_mime_data (cairo_surface_t		*surface,
 }
 slim_hidden_def (cairo_surface_get_mime_data);
 
-static void
+static void CAIRO_CALLCONV
 _cairo_mime_data_destroy (void *ptr)
 {
     cairo_mime_data_t *mime_data = ptr;

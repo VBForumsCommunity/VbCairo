@@ -469,7 +469,7 @@ _cairo_scaled_glyph_page_destroy (cairo_scaled_font_t *scaled_font,
     free (page);
 }
 
-static void
+static void CAIRO_CALLCONV
 _cairo_scaled_glyph_page_pluck (void *closure)
 {
     cairo_scaled_glyph_page_t *page = closure;

@@ -395,7 +395,7 @@ cairo_private void *
 _cairo_user_data_array_get_data (cairo_user_data_array_t     *array,
 				 const cairo_user_data_key_t *key);
 
-cairo_private cairo_status_t
+cairo_private cairo_status_t CAIRO_CALLCONV
 _cairo_user_data_array_set_data (cairo_user_data_array_t     *array,
 				 const cairo_user_data_key_t *key,
 				 void			     *user_data,

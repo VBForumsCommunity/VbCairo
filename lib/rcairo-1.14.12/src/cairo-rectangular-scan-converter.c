@@ -760,7 +760,7 @@ _cairo_rectangular_scan_converter_add_box (cairo_rectangular_scan_converter_t *s
     return CAIRO_STATUS_SUCCESS;
 }
 
-static void
+static void CAIRO_CALLCONV
 _cairo_rectangular_scan_converter_destroy (void *converter)
 {
     cairo_rectangular_scan_converter_t *self = converter;

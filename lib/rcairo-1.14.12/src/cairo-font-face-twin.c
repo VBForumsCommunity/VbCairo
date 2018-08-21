@@ -300,7 +300,7 @@ twin_font_face_create_properties (cairo_font_face_t *twin_face)
 
     if (unlikely (cairo_font_face_set_user_data (twin_face,
 					    &twin_properties_key,
-					    props, free))) {
+					    props, free_stdcall))) {
 	free (props);
 	return NULL;
     }
@@ -440,7 +440,7 @@ twin_scaled_font_compute_properties (cairo_scaled_font_t *scaled_font,
     /* Save it */
     status = cairo_scaled_font_set_user_data (scaled_font,
 					      &twin_properties_key,
-					      props, free);
+					      props, free_stdcall);
     if (unlikely (status))
 	goto FREE_PROPS;
 
@@ -456,7 +456,7 @@ FREE_PROPS:
  * User-font implementation
  */
 
-static cairo_status_t
+static cairo_status_t CAIRO_CALLCONV
 twin_scaled_font_init (cairo_scaled_font_t  *scaled_font,
 		       cairo_t              *cr,
 		       cairo_font_extents_t *metrics)
@@ -556,7 +556,7 @@ twin_snap (int8_t v, int n, int8_t *snap, double *snapped)
 #define SNAPX(p)	twin_snap (p, info.n_snap_x, info.snap_x, info.snapped_x)
 #define SNAPY(p)	twin_snap (p, info.n_snap_y, info.snap_y, info.snapped_y)
 
-static cairo_status_t
+static cairo_status_t CAIRO_CALLCONV
 twin_scaled_font_render_glyph (cairo_scaled_font_t  *scaled_font,
 			       unsigned long         glyph,
 			       cairo_t              *cr,
@@ -682,7 +682,7 @@ twin_scaled_font_render_glyph (cairo_scaled_font_t  *scaled_font,
     return CAIRO_STATUS_SUCCESS;
 }
 
-static cairo_status_t
+static cairo_status_t CAIRO_CALLCONV
 twin_scaled_font_unicode_to_glyph (cairo_scaled_font_t *scaled_font,
 				   unsigned long        unicode,
 				   unsigned long       *glyph)

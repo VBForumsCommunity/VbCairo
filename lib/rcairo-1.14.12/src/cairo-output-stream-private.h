@@ -92,7 +92,7 @@ typedef cairo_status_t (*cairo_close_func_t) (void *closure);
  * called by a call to _cairo_output_stream_close or
  * _cairo_output_stream_destroy.
  */
-cairo_private cairo_output_stream_t *
+cairo_private cairo_output_stream_t * CAIRO_CALLCONV
 _cairo_output_stream_create (cairo_write_func_t		write_func,
 			     cairo_close_func_t		close_func,
 			     void			*closure);

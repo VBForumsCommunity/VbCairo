@@ -158,14 +158,22 @@ png_simple_warning_callback (png_structp png,
      */
 }
 
-static int
-png_setjmp (png_struct *png)
-{
-#ifdef PNG_SETJMP_SUPPORTED
-    return setjmp (png_jmpbuf (png));
-#endif
-    return 0;
-}
+//
+// Replacement of function
+// before it could cause the crash because the setjmp call was inside png_setjmp.
+// To avoid that behaviour it should to be inline function
+//
+#define png_setjmp(png) setjmp (png_jmpbuf (png))
+
+//static int
+//png_setjmp (png_struct *png)
+//{
+//#ifdef PNG_SETJMP_SUPPORTED
+//    return setjmp (png_jmpbuf (png));
+//#else
+//    return 0;
+//#endif
+//}
 
 /* Starting with libpng-1.2.30, we must explicitly specify an output_flush_fn.
  * Otherwise, we will segfault if we are writing to a stream. */

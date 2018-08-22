@@ -11,6 +11,7 @@
 *.o -text
 *.so -text
 *.a -text
+*.pdb -text
 
 # generated
 mdParser.bas -diff

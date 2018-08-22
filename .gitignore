@@ -8,8 +8,6 @@
 *.exp
 *.lib
 *.obj
-*.dll
 *.exe
-*.pdb
 */_del/
 ~*

@@ -159,6 +159,14 @@ static const cairo_t _cairo_nil[] = {
 COMPILE_TIME_ASSERT (ARRAY_LENGTH (_cairo_nil) == CAIRO_STATUS_LAST_STATUS - 1);
 
 /**
+ * stdcall thunk for free function
+ **/
+void __stdcall 
+free_stdcall(void *pMem) {
+	free(pMem);
+}
+
+/**
  * _cairo_set_error:
  * @cr: a cairo context
  * @status: a status value indicating an error

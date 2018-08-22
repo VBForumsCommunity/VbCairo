@@ -82,6 +82,9 @@ CAIRO_BEGIN_DECLS
 	CAIRO_VERSION_MICRO)
 
 
+void __stdcall 
+free_stdcall(void *);
+
 cairo_public int CAIRO_CALLCONV
 cairo_version (void);
 
@@ -229,7 +232,7 @@ typedef struct _cairo_pattern cairo_pattern_t;
  *
  * Since: 1.0
  **/
-typedef void (*cairo_destroy_func_t) (void *data);
+typedef void (CAIRO_CALLCONV *cairo_destroy_func_t) (void *data);
 
 /**
  * cairo_user_data_key_t:
@@ -434,7 +437,7 @@ typedef enum _cairo_format {
  *
  * Since: 1.0
  **/
-typedef cairo_status_t (*cairo_write_func_t) (void		  *closure,
+typedef cairo_status_t (CAIRO_CALLCONV *cairo_write_func_t) (void		  *closure,
 					      const unsigned char *data,
 					      unsigned int	   length);
 
@@ -456,7 +459,7 @@ typedef cairo_status_t (*cairo_write_func_t) (void		  *closure,
  *
  * Since: 1.0
  **/
-typedef cairo_status_t (*cairo_read_func_t) (void		*closure,
+typedef cairo_status_t (CAIRO_CALLCONV *cairo_read_func_t) (void		*closure,
 					     unsigned char	*data,
 					     unsigned int	length);
 
@@ -1700,7 +1703,7 @@ cairo_user_font_face_create (void);
  *
  * Since: 1.8
  **/
-typedef cairo_status_t (*cairo_user_scaled_font_init_func_t) (cairo_scaled_font_t  *scaled_font,
+typedef cairo_status_t (CAIRO_CALLCONV *cairo_user_scaled_font_init_func_t) (cairo_scaled_font_t  *scaled_font,
 							      cairo_t              *cr,
 							      cairo_font_extents_t *extents);
 
@@ -1747,7 +1750,7 @@ typedef cairo_status_t (*cairo_user_scaled_font_init_func_t) (cairo_scaled_font_
  *
  * Since: 1.8
  **/
-typedef cairo_status_t (*cairo_user_scaled_font_render_glyph_func_t) (cairo_scaled_font_t  *scaled_font,
+typedef cairo_status_t (CAIRO_CALLCONV *cairo_user_scaled_font_render_glyph_func_t) (cairo_scaled_font_t  *scaled_font,
 								      unsigned long         glyph,
 								      cairo_t              *cr,
 								      cairo_text_extents_t *extents);
@@ -1817,7 +1820,7 @@ typedef cairo_status_t (*cairo_user_scaled_font_render_glyph_func_t) (cairo_scal
  *
  * Since: 1.8
  **/
-typedef cairo_status_t (*cairo_user_scaled_font_text_to_glyphs_func_t) (cairo_scaled_font_t        *scaled_font,
+typedef cairo_status_t (CAIRO_CALLCONV *cairo_user_scaled_font_text_to_glyphs_func_t) (cairo_scaled_font_t        *scaled_font,
 									const char	           *utf8,
 									int		            utf8_len,
 									cairo_glyph_t	          **glyphs,
@@ -1864,7 +1867,7 @@ typedef cairo_status_t (*cairo_user_scaled_font_text_to_glyphs_func_t) (cairo_sc
  *
  * Since: 1.8
  **/
-typedef cairo_status_t (*cairo_user_scaled_font_unicode_to_glyph_func_t) (cairo_scaled_font_t *scaled_font,
+typedef cairo_status_t (CAIRO_CALLCONV *cairo_user_scaled_font_unicode_to_glyph_func_t) (cairo_scaled_font_t *scaled_font,
 									  unsigned long        unicode,
 									  unsigned long       *glyph_index);
 
@@ -2597,7 +2600,7 @@ cairo_recording_surface_get_extents (cairo_surface_t *surface,
  * Since: 1.12
  **/
 typedef cairo_surface_t *
-(*cairo_raster_source_acquire_func_t) (cairo_pattern_t *pattern,
+(CAIRO_CALLCONV *cairo_raster_source_acquire_func_t) (cairo_pattern_t *pattern,
 				       void *callback_data,
 				       cairo_surface_t *target,
 				       const cairo_rectangle_int_t *extents);
@@ -2616,7 +2619,7 @@ typedef cairo_surface_t *
  * Since: 1.12
  **/
 typedef void
-(*cairo_raster_source_release_func_t) (cairo_pattern_t *pattern,
+(CAIRO_CALLCONV *cairo_raster_source_release_func_t) (cairo_pattern_t *pattern,
 				       void *callback_data,
 				       cairo_surface_t *surface);
 
@@ -2637,7 +2640,7 @@ typedef void
  * Since: 1.12
  **/
 typedef cairo_status_t
-(*cairo_raster_source_snapshot_func_t) (cairo_pattern_t *pattern,
+(CAIRO_CALLCONV *cairo_raster_source_snapshot_func_t) (cairo_pattern_t *pattern,
 					void *callback_data);
 
 /**
@@ -2655,7 +2658,7 @@ typedef cairo_status_t
  * Since: 1.12
  **/
 typedef cairo_status_t
-(*cairo_raster_source_copy_func_t) (cairo_pattern_t *pattern,
+(CAIRO_CALLCONV *cairo_raster_source_copy_func_t) (cairo_pattern_t *pattern,
 				    void *callback_data,
 				    const cairo_pattern_t *other);
 
@@ -2670,7 +2673,7 @@ typedef cairo_status_t
  * Since: 1.12
  **/
 typedef void
-(*cairo_raster_source_finish_func_t) (cairo_pattern_t *pattern,
+(CAIRO_CALLCONV *cairo_raster_source_finish_func_t) (cairo_pattern_t *pattern,
 				      void *callback_data);
 
 cairo_public cairo_pattern_t * CAIRO_CALLCONV

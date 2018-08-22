@@ -503,7 +503,7 @@ convert_bytes_to_data (png_structp png, png_row_infop row_info, png_bytep data)
     }
 }
 
-static cairo_status_t
+static cairo_status_t CAIRO_CALLCONV
 stdio_read_func (void *closure, unsigned char *data, unsigned int size)
 {
     FILE *file = closure;
@@ -711,7 +711,7 @@ read_png (struct png_read_closure_t *png_closure)
 					  CAIRO_MIME_TYPE_PNG,
 					  mime_data,
 					  mime_data_length,
-					  free,
+					  free_stdcall,
 					  mime_data);
     if (unlikely (status)) {
 	free (mime_data);

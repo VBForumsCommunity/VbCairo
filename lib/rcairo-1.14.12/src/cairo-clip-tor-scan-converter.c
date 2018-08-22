@@ -1754,7 +1754,7 @@ struct _cairo_clip_tor_scan_converter {
 
 typedef struct _cairo_clip_tor_scan_converter cairo_clip_tor_scan_converter_t;
 
-static void
+static void CAIRO_CALLCONV
 _cairo_clip_tor_scan_converter_destroy (void *converter)
 {
     cairo_clip_tor_scan_converter_t *self = converter;

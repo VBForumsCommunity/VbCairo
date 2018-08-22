@@ -2128,7 +2128,7 @@ botor_add_edge (cairo_botor_scan_converter_t *self,
     return CAIRO_STATUS_SUCCESS;
 }
 
-static void
+static void CAIRO_CALLCONV
 _cairo_botor_scan_converter_destroy (void *converter)
 {
     cairo_botor_scan_converter_t *self = converter;

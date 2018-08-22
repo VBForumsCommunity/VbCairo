@@ -32,7 +32,7 @@
 #include "cairo-fixed-private.h"
 #include "cairo-types-private.h"
 
-static void
+static void CAIRO_CALLCONV
 _cairo_nil_destroy (void *abstract)
 {
     (void) abstract;

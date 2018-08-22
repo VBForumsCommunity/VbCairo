@@ -445,7 +445,7 @@ _cairo_user_data_array_get_data (cairo_user_data_array_t     *array,
  * Return value: %CAIRO_STATUS_SUCCESS or %CAIRO_STATUS_NO_MEMORY if a
  * slot could not be allocated for the user data.
  **/
-cairo_status_t
+cairo_status_t CAIRO_CALLCONV
 _cairo_user_data_array_set_data (cairo_user_data_array_t     *array,
 				 const cairo_user_data_key_t *key,
 				 void			     *user_data,

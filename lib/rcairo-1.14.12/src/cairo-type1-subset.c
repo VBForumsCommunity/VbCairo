@@ -1544,7 +1544,7 @@ cairo_type1_font_subset_write_trailer(cairo_type1_font_subset_t *font)
     return CAIRO_STATUS_SUCCESS;
 }
 
-static cairo_status_t
+static cairo_status_t CAIRO_CALLCONV
 type1_font_write (void *closure, const unsigned char *data, unsigned int length)
 {
     cairo_type1_font_subset_t *font = closure;

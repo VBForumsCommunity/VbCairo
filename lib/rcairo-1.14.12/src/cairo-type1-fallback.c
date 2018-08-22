@@ -544,7 +544,7 @@ cairo_type1_font_write_header (cairo_type1_font_t *font,
                                  "currentfile eexec\n");
 }
 
-static cairo_status_t
+static cairo_status_t CAIRO_CALLCONV
 cairo_type1_write_stream_encrypted (void                *closure,
                                     const unsigned char *data,
                                     unsigned int         length)
@@ -647,7 +647,7 @@ cairo_type1_font_write_trailer(cairo_type1_font_t *font)
     _cairo_output_stream_printf (font->output, "cleartomark\n");
 }
 
-static cairo_status_t
+static cairo_status_t CAIRO_CALLCONV
 cairo_type1_write_stream (void *closure,
                          const unsigned char *data,
                          unsigned int length)

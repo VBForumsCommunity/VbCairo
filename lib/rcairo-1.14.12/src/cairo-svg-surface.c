@@ -1047,7 +1047,7 @@ typedef struct {
 static char const base64_table[64] =
 "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-static cairo_status_t
+static cairo_status_t CAIRO_CALLCONV
 base64_write_func (void *closure,
 		   const unsigned char *data,
 		   unsigned int length)
